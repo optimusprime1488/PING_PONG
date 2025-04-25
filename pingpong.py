@@ -53,8 +53,10 @@ class Ball (GameSprite):
             self.speed_y *= -1
         if self.rect.colliderect(rocket1) or self.rect.colliderect(rocket2):
             self.speed_x *= -1
-            ammount1 += 1
-
+            
+            
+            
+replay = GameSprite('rp.png',w/6,h/6,w/2,h/3,0)
 ball = Ball('lin.png',w/9,h/9,w-w/1.85,360,5)
 ball.init()
 rocket1 = Player1('ufo.png',w/6,h/6,w-w/6,360,10)
@@ -69,10 +71,10 @@ def get_finish():
         text = 'Player2 lose'
         finish = True
 
+
 start1 = pg.font.SysFont('arial',100).render("3",True,(255,255,255))
 start2 = pg.font.SysFont('arial',100).render("2",True,(255,255,255))
 start3 = pg.font.SysFont('arial',100).render("1",True,(255,255,255))
-a = pg.font.SysFont('arial',65).render("Очков:" + str(ammount1),True,(255,255,255))
 num1 = pg.font.SysFont('arial',65).render("P1",True,(255,255,255))
 num2 = pg.font.SysFont('arial',65).render("P2",True,(255,255,255))
 finish = False
@@ -85,19 +87,19 @@ while run:
             run = False
     get_finish()
     if not finish:
-        if ammount < 60:
+        if ammount > 0 and ammount <= 60:
             win.blit(bg,(0,0))
             win.blit(start1,(w-w/1.85,360))
             ammount +=1
-        elif ammount < 120:
+        elif ammount > 60 and ammount <= 120:
             win.blit(bg,(0,0))
             win.blit(start2,(w-w/1.85,360))
             ammount +=1
-        elif ammount < 180:
+        elif ammount > 120 and ammount <= 180:
             ammount +=1
             win.blit(bg,(0,0))
             win.blit(start3,(w-w/1.85,360))
-        elif ammount < 240:
+        elif ammount > 180 and ammount <= 240:
             keys_pressed = pg.key.get_pressed()
             win.blit(bg,(0,0))
             win.blit(num1,(w-w/1.15,0))
@@ -108,11 +110,42 @@ while run:
             rocket1.reset()
             ball.update()
             ball.reset()
+            a = pg.font.SysFont('arial',65).render("Очков:" + str(ammount1),True,(255,255,255))
             win.blit(a,(w-w/2,0))
+            if ball.rect.colliderect(rocket1) or ball.rect.colliderect(rocket2):
+                ammount1 +=1
+
+
     else:
         win.blit(bg,(0,0))
         label = pg.font.SysFont('arial',65).render(text,True,(255,255,255))
+        l1 = pg.font.SysFont('arial',65).render('Чтобы продолжить табни мышкой',True,(255,255,255))
         win.blit(label,(w-w/1.55,h-h/2))
+        win.blit(l1,(w-w/1.2,h-h/2.8))
+        if e.type == pg.MOUSEBUTTONDOWN:
+            ammount1 = 0
+            ammount = 1
+            run = True
+            finish = False
+            keys_pressed = pg.key.get_pressed()
+            win.blit(bg,(0,0))
+            win.blit(num1,(w-w/1.15,0))
+            win.blit(num2,(w-w/6,0))
+            rocket2.update(keys_pressed)
+            rocket2.reset()
+            rocket1.update(keys_pressed)
+            rocket1.reset()
+            ball.rect.y = 360
+            ball.rect.x = w-w/1.85
+            ball.update()
+            ball.reset()
+            a = pg.font.SysFont('arial',65).render("Очков:" + str(ammount1),True,(255,255,255))
+            win.blit(a,(w-w/2,0))
+            if ball.rect.colliderect(rocket1) or ball.rect.colliderect(rocket2):
+                ammount1 +=1
+
+
+                    
 
 
     pg.display.update()
